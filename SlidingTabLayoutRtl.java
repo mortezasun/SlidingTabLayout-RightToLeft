@@ -108,6 +108,7 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
      */
     FragmentStatePagerAdapter mAdapterState;
     public void setViewPager(ViewPager viewPager) {
+         this.mAdapterState = ((FragmentStatePagerAdapter) viewPager.getAdapter());
         mTabStrip.removeAllViews();
 
         mViewPager = viewPager;
@@ -174,7 +175,7 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
             if (desc != null) {
                 tabView.setContentDescription(desc);
             }
-
+            tabTitleView.setText(adapter.getPageTitle(i));
             mTabStrip.addView(tabView);
             if (i == mViewPager.getCurrentItem()) {
                 tabView.setSelected(true);
