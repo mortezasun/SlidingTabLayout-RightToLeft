@@ -1,6 +1,7 @@
+package com.kaltura.mediago.views;
+
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -15,19 +16,25 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kaltura.mediago.views.utils.SlidingTabStripRtl;
+
 /**
- * Created by Mortezasun on 7/25/2015.
- *
- * :)
+ * Created by Itzhar on 5/4/16.
  */
 public class SlidingTabLayoutRtl extends HorizontalScrollView {
 
     public interface TabColorizer {
 
+
         /**
          * @return return the color of the indicator used when {@code position} is selected.
          */
         int getIndicatorColor(int position);
+
+        /**
+         * @return return the color of the divider drawn to the right of {@code position}.
+         */
+        int getDividerColor(int position);
 
     }
 
@@ -108,8 +115,8 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
      */
     FragmentStatePagerAdapter mAdapterState;
     public void setViewPager(ViewPager viewPager) {
+        this.mAdapterState = ((FragmentStatePagerAdapter) viewPager.getAdapter());
         mTabStrip.removeAllViews();
-
         mViewPager = viewPager;
         if (viewPager != null) {
             viewPager.setOnPageChangeListener(new InternalViewPagerListener());
@@ -124,12 +131,9 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         textView.setTypeface(Typeface.DEFAULT_BOLD);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
+        textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         TypedValue outValue = new TypedValue();
-        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground,
-                outValue, true);
+        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
         textView.setBackgroundResource(outValue.resourceId);
         textView.setAllCaps(true);
 
@@ -149,8 +153,7 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
 
             if (mTabViewLayoutId != 0) {
                 // If there is a custom tab view layout id set, try and inflate it
-                tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
-                        false);
+                tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
                 tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
             }
 
@@ -174,7 +177,7 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
             if (desc != null) {
                 tabView.setContentDescription(desc);
             }
-
+            tabTitleView.setText(adapter.getPageTitle(i));
             mTabStrip.addView(tabView);
             if (i == mViewPager.getCurrentItem()) {
                 tabView.setSelected(true);
@@ -222,9 +225,9 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                RealPosition=(mAdapterState.getCount()-1) - position;
+            RealPosition=(mAdapterState.getCount()-1) - position;
 
-              //  RealPosition=position; Left To Right Support
+            //  RealPosition=position; Left To Right Support
 
             int tabStripChildCount = mTabStrip.getChildCount();
             if ((tabStripChildCount == 0) || (RealPosition < 0) || (RealPosition >= tabStripChildCount)) {
@@ -257,10 +260,10 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
         @Override
         public void onPageSelected(int position) {
 
-                RealPosition=(mAdapterState.getCount()-1) - position;
+            RealPosition=(mAdapterState.getCount()-1) - position;
 
 
-              //  RealPosition=position;Left To Right Support
+            //  RealPosition=position;Left To Right Support
 
             if (mScrollState == ViewPager.SCROLL_STATE_IDLE) {
                 mTabStrip.onViewPagerPageChanged(RealPosition, 0f);
@@ -282,9 +285,9 @@ public class SlidingTabLayoutRtl extends HorizontalScrollView {
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 if (v == mTabStrip.getChildAt(i)) {
 
-                        mViewPager.setCurrentItem((mAdapterState.getCount() - 1)-i);
+                    mViewPager.setCurrentItem((mAdapterState.getCount() - 1)-i);
 
-                       // mViewPager.setCurrentItem(i); Left To Right Support
+                    // mViewPager.setCurrentItem(i); Left To Right Support
 
 
 
